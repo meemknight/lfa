@@ -49,7 +49,7 @@ int main()
 	std::vector<Transitions> transitions;
 
 
-	std::ifstream f(RESOURCES_PATH "test.txt");
+	std::ifstream f(RESOURCES_PATH "program3.txt");
 	permaAssertComment(f.is_open(), "file not found");
 	
 	int currentState = ReadStates::none;
@@ -191,6 +191,8 @@ int main()
 
 	}
 
+
+#if 0
 	std::cout << "sigma:\n";
 	for(auto &i : sigma)
 	{
@@ -210,8 +212,13 @@ int main()
 	{
 		std::cout << i << " " << "\n";
 	}
+#endif
 
-	execute(sigma, states, beginStateIndex, transitions);
+
+	while(true)
+	{
+		execute(sigma, states, beginStateIndex, transitions);
+	}
 
 
 	std::cin.clear();

@@ -1,0 +1,45 @@
+#
+# verifica daca un cuvant are cel putin doi '0' si cel putin un '1'
+#
+
+Sigma:
+	0
+	1
+End
+
+
+States:
+	
+	final, F
+	start, S
+
+	one
+	zero
+	zeroZero
+	oneZero
+
+End
+
+
+Transitions:
+
+	final, 0, final
+	final, 1, final
+
+	start, 1, one
+	start, 0, zero
+
+	zero, 1, oneZero
+	zero, 0, zeroZero
+
+	zeroZero, 0, zeroZero
+	zeroZero, 1, final
+
+	oneZero, 0, final
+	oneZero, 1, oneZero
+
+	one, 1, one
+	one, 0, oneZero
+
+
+End

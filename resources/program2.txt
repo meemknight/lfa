@@ -1,0 +1,21 @@
+#
+# verifica daca un cuvant e doar din a sau doar din b
+#
+Sigma:
+    a
+    b
+End
+
+States:
+    S, S
+    A, F
+    B, F
+End
+
+
+Transitions:
+   S, a, A
+   S, b, B
+   A, a, A
+   B, b, B
+End

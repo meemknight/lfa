@@ -5,7 +5,6 @@ void execute(std::vector<std::string> &sigma,
 	int beginStateIndex, 
 	std::vector<Transitions> &transitions)
 {
-	std::cout << "\n";
 	std::cout << "enter word:\n";
 	std::string w;
 	std::cin >> w;
@@ -34,8 +33,10 @@ void execute(std::vector<std::string> &sigma,
 
 		if(id == transitions.end())
 		{
-			//todo
-			errorOut("invalid transition");
+
+			std::cout << "Invalid Transition\nWord not accepted\n";
+			return;
+
 		}else
 		{
 			std::cout << "from " << currentState << "  to "
@@ -61,7 +62,7 @@ void execute(std::vector<std::string> &sigma,
 		errorOut("invalid state");
 	}else
 	{
-		std::cout << "end state : " << (*id).name << "\n\n";
+		std::cout << "end state : " << (*id).name << "\n";
 
 		if((*id).isEnd)
 		{
