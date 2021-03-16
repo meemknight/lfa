@@ -1,31 +1,33 @@
 #
 # Sigma contine cuvintele (sau litere poti considera):
 #
-Sigma:
-    a
-    b
-    c
-    1
+#pt sigma a,b verifica daca cuvantul nu are a / b in el
+
+Sigma:		
+	a
+	b
 End
-#
-# Si avem urmatoarele stari
-#
-States:
-    1
-    2, S
-    3
-    sad
-    happy, F
+
+
+States: 
+	s, S	 
+	0, F 
+	1, F	
+	bad
 End
-#
-# Si urmatoarele tranzitii
-#
-Transitions:
-    1, 1, sad
-    1, b, happy
-    sad, a, happy
-    happy, a, 1
-    2, a, 3
-    2, 1, 1
-    3, b, 2
+
+
+Transitions:	
+	s, a, 1
+	s, b, 0
+
+	0, b, 0
+	0, a, 1
+
+	1, a, 1
+	1, b, bad
+
+	bad, a, bad
+	bad, b, bad
+	
 End

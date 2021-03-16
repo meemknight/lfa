@@ -9,6 +9,7 @@
 #include <cctype>
 
 #include "lfa/tools.h"
+#include "lfa/other.h"
 
 #ifdef PLATFORM_WIN32
 #include <Windows.h>
@@ -17,7 +18,7 @@
 #undef min
 #undef max
 
-enum States
+enum ReadStates
 {
 	none = 0,
 	sigma,
@@ -44,6 +45,18 @@ struct Transitions
 	}
 };
 
+struct States
+{
+	States() {};
+	States(std::string name):name(name) {};
+	States(std::string name, int isBegin, int isEnd)
+		:name(name), isBegin(isBegin), isEnd(isEnd) {};
+
+	std::string name = "";
+	int isBegin = 0;
+	int isEnd = 0;
+};
+
 int main()
 {
 
@@ -58,87 +71,116 @@ int main()
 #endif
 
 	std::vector<std::string> sigma;
-	std::vector<std::string> states;
-	std::vector<std::string> finalStates;
-	std::string beginState;
+	
+	std::vector<States> states;
+	int beginStateIndex = -1;
+
 	std::vector<Transitions> transitions;
 
 
 	std::ifstream f(RESOURCES_PATH "test.txt");
 	permaAssertComment(f.is_open(), "file not found");
 	
-	int currentState = States::none;
+	int currentState = ReadStates::none;
 
 	std::string line;
 	while(std::getline(f, line))
 	{
+
+	#pragma region erase comments
 		auto commentBegin = line.find('#');
 		if(commentBegin != std::string::npos)
 		{
 			line.erase(line.begin() + commentBegin, line.end());
 		}
-		
+	#pragma endregion
+
+	#pragma region ignore empty lines
 		if(line.empty())
 		{
 			continue;
 		}
+	#pragma endregion
 
+	#pragma region get the first word on line (s)
 		std::istringstream linestream(line);
 		std::string s;
 		linestream >> s;
 		
-		auto f = s.find(',');
-		if(f != std::string::npos)
-		s.erase(s.begin() + f);
+		s = removeEverythingAfterComa(s);
+		
+		s = removeEverythingAfterSpace(s);
 
-		if(s == "Sigma:")
+	#pragma endregion
+
+
+		if(toLower(s) == "sigma:")
 		{
-			currentState = States::sigma;
+			currentState = ReadStates::sigma;
 			continue;
 		}else
-		if(s == "States:")
+		if(toLower(s) == "states:")
 		{
-			currentState = States::states;
+			currentState = ReadStates::states;
 			continue;
 		}else
-		if(s == "Transitions:")
+		if(toLower(s) == "transitions:")
 		{
-			currentState = States::transitions;
+			currentState = ReadStates::transitions;
 			continue;
 		}else
-		if(s == "End")
+		if(toLower(s) == "end")
 		{
-			currentState = States::none;
+			currentState = ReadStates::none;
 		}
 
-		if(currentState == States::sigma)
+		if(currentState == ReadStates::sigma)
 		{
 			
 			sigma.push_back(s);
 			continue;
 		}
 
-		if(currentState == States::states)
+		if(currentState == ReadStates::states)
 		{
 			std::string s2;
 
 			linestream >> s2;
+			s2 = removeEverythingAfterSpace(s2);
 
-			if(s2 == "S")
+			if(hasInvalidCharacters(s2))
 			{
-				beginState = s;
-			}else if(s2 == "F")
+				errorOut("err, invalid parse in state\n");
+			}
+
+			if(toLower(s2) == "s")
 			{
-				finalStates.push_back(s);
-			}else
+				states.push_back(States(s, 1, 0));
+				if(beginStateIndex != -1)
+				{
+					std::cout << "err, 2 begin states or more\n";
+					std::cin.clear();
+					std::cin.get();
+					return 0;
+				}
+
+				beginStateIndex = states.size() - 1;
+
+			}else if(toLower(s2) == "f")
+			{
+				states.push_back(States(s, 0, 1));
+			}else if(s2 == "")
 			{
 				states.push_back(s);
+			}else
+			{
+				errorOut("err, invalid parse in state\n");
 			}
 
 			continue;
 		}
 
-		if(currentState == States::transitions)
+		if(currentState == ReadStates::transitions)
 		{
 			std::string s2, s3;
 			linestream >> s2 >> s3;
@@ -152,27 +194,21 @@ int main()
 
 	}
 
-	
+	std::cout << "sigma:\n";
 	for(auto &i : sigma)
 	{
 		std::cout << i << " ";
 	}
-	std::cout << "\n";
+	
+	std::cout << "\n\nStates:\n";
 	for (auto &i : states)
 	{
-		std::cout << i << " ";
+		std::cout << i.name <<" isBegin:" <<i.isBegin 
+			<< " isEnd:"<<i.isEnd << "\n";
 	}
-	std::cout << "\n";
 
-	for (auto &i : finalStates)
-	{
-		std::cout << i << " ";
-	}
-	std::cout << "\n";
-	std::cout << beginState;
-	std::cout << "\n";
-	std::cout << "\n";
 
+	std::cout << "\n\nTransitions:\n";
 	for (auto &i : transitions)
 	{
 		std::cout << i << " " << "\n";
