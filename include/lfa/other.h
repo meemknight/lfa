@@ -29,6 +29,32 @@ std::string removeEverythingAfterSpace(const std::string &s)
 	return std::move(copy);
 }
 
+std::string removeLastSpaces(const std::string &s)
+{
+	auto copy = s;
+
+	while(true)
+	{
+		if(
+			!copy.empty() && 
+				(	
+				copy[copy.size() - 1] == ' ' ||
+				copy[copy.size() - 1] == '\t'
+				)
+			)
+		{
+			copy.pop_back();
+		}else
+		{
+			break;
+		}
+	}
+
+
+	return std::move(copy);
+
+}
+
 
 std::string removeEverythingAfterComa(const std::string &s)
 {
@@ -49,16 +75,18 @@ void errorOut(std::string msg)
 
 }
 
-std::vector<std::string> splitStringAtComas(const std::string &s)
+std::vector<std::string> splitStringAtComas(const std::string &s2)
 {
 	std::vector<std::string> ret;
 
+	std::string s = removeLastSpaces(s2);
+
 	std::string curent = "";
-	bool readingWord = 1;
+	bool readingWord = 0;
 	
 	for(auto i: s)
 	{
-		if(i == ' ' && i == '\t')
+		if(i == ' ' || i == '\t')
 		{
 			if(readingWord)
 			{

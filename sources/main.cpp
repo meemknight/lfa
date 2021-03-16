@@ -96,6 +96,8 @@ int main()
 	#pragma endregion
 
 	#pragma region ignore empty lines
+		line = removeLastSpaces(line);
+
 		if(line.empty())
 		{
 			continue;
@@ -136,22 +138,40 @@ int main()
 
 		if(currentState == ReadStates::sigma)
 		{
-			
-			sigma.push_back(s);
-			continue;
+			auto parseElements = splitStringAtComas(line);
+
+			if (parseElements.size() == 1)
+			{
+				sigma.push_back(parseElements[0]);
+				continue;
+			}else
+			{
+				errorOut("sintax err reading sigma: " + line);
+			}
+
 		}
 
 		if(currentState == ReadStates::states)
 		{
-			std::string s2;
+			auto parseElements = splitStringAtComas(line);
 
-			linestream >> s2;
-			s2 = removeEverythingAfterSpace(s2);
-
-			if(hasInvalidCharacters(s2))
+			if(parseElements.size() > 2)
 			{
-				errorOut("err, invalid parse in state\n");
+				errorOut("too many arguments: " + line);
 			}
+
+			if(parseElements.size() == 0)
+			{
+				errorOut("no elements");
+			}
+
+			if (parseElements.size() == 1)
+			{
+				parseElements.push_back("");
+			}
+
+			std::string s = parseElements[0];
+			std::string s2 = parseElements[1];
 
 			if(toLower(s2) == "s")
 			{
@@ -182,12 +202,18 @@ int main()
 
 		if(currentState == ReadStates::transitions)
 		{
-			std::string s2, s3;
-			linestream >> s2 >> s3;
+			auto parseElements = splitStringAtComas(line);
 
-			auto f = s2.find(',');
-			if (f != std::string::npos)
-				s2.erase(s2.begin() + f);
+			if (parseElements.size() != 3)
+			{
+				errorOut("sintax error transitions: " + line);
+			}
+
+			std::string s, s2, s3;
+			
+			s = parseElements[0];
+			s2 = parseElements[1];
+			s3 = parseElements[2];
 
 			transitions.emplace_back(s, s2, s3);
 		}
