@@ -10,6 +10,7 @@
 
 #include "lfa/tools.h"
 #include "lfa/other.h"
+#include "lfa/execute.h"
 
 #ifdef PLATFORM_WIN32
 #include <Windows.h>
@@ -26,37 +27,6 @@ enum ReadStates
 	transitions,
 };
 
-struct Transitions
-{
-	Transitions() {};
-	Transitions(std::string a, std::string s, std::string b):
-		stateA(a), symbol(s), stateB(b)
-	{};
-
-	std::string stateA;
-	std::string	symbol;
-	std::string stateB;
-
-
-	friend std::ostream &operator<<(std::ostream &output, const Transitions &t)
-	{
-		output << t.stateA   << " " << t.symbol << " " << t.stateB;
-		return output;
-	}
-};
-
-struct States
-{
-	States() {};
-	States(std::string name):name(name) {};
-	States(std::string name, int isBegin, int isEnd)
-		:name(name), isBegin(isBegin), isEnd(isEnd) {};
-
-	std::string name = "";
-	int isBegin = 0;
-	int isEnd = 0;
-};
-
 int main()
 {
 
@@ -70,6 +40,7 @@ int main()
 #endif
 #endif
 
+	//todo sigma should be one char only
 	std::vector<std::string> sigma;
 	
 	std::vector<States> states;
@@ -240,7 +211,10 @@ int main()
 		std::cout << i << " " << "\n";
 	}
 
+	execute(sigma, states, beginStateIndex, transitions);
+
 
 	std::cin.clear();
+	std::cin.ignore();
 	std::cin.get();
 }

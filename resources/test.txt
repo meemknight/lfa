@@ -1,7 +1,7 @@
 #
 # Sigma contine cuvintele (sau litere poti considera):
 #
-#pt sigma a,b verifica daca cuvantul nu are a / b in el
+#pt sigma a,b verifica daca cuvantul nu are "ab" in el
 
 Sigma:		
 	a

@@ -3,8 +3,45 @@
 #include <algorithm>
 #include <utility>
 #include <iterator>
+#include <iostream>
+#include <vector>
 
-std::string toLower(const std::string &s)
+struct Transitions
+{
+	Transitions() {};
+	Transitions(std::string a, std::string s, std::string b):
+		stateA(a), symbol(s), stateB(b)
+	{
+	};
+
+	std::string stateA;
+	std::string	symbol;
+	std::string stateB;
+
+
+	friend std::ostream &operator<<(std::ostream &output, const Transitions &t)
+	{
+		output << t.stateA << " " << t.symbol << " " << t.stateB;
+		return output;
+	}
+};
+
+struct States
+{
+	States() {};
+	States(std::string name):name(name) {};
+	States(std::string name, int isBegin, int isEnd)
+		:name(name), isBegin(isBegin), isEnd(isEnd)
+	{
+	};
+
+	std::string name = "";
+	int isBegin = 0;
+	int isEnd = 0;
+};
+
+
+inline std::string toLower(const std::string &s)
 {
 	std::string newS = "";
 
@@ -15,7 +52,7 @@ std::string toLower(const std::string &s)
 }
 
 
-std::string removeEverythingAfterSpace(const std::string &s)
+inline std::string removeEverythingAfterSpace(const std::string &s)
 {
 	auto copy = s;
 	auto f = copy.find(' ');
@@ -29,7 +66,7 @@ std::string removeEverythingAfterSpace(const std::string &s)
 	return std::move(copy);
 }
 
-std::string removeLastSpaces(const std::string &s)
+inline std::string removeLastSpaces(const std::string &s)
 {
 	auto copy = s;
 
@@ -56,7 +93,7 @@ std::string removeLastSpaces(const std::string &s)
 }
 
 
-std::string removeEverythingAfterComa(const std::string &s)
+inline std::string removeEverythingAfterComa(const std::string &s)
 {
 	auto copy = s;
 	auto f = copy.find(',');
@@ -66,16 +103,17 @@ std::string removeEverythingAfterComa(const std::string &s)
 	return std::move(copy);
 }
 
-void errorOut(std::string msg)
+inline void errorOut(std::string msg)
 {
 	std::cout << msg;
 	std::cin.clear();
+	std::cin.ignore();
 	std::cin.get();
 	exit(1);
 
 }
 
-std::vector<std::string> splitStringAtComas(const std::string &s2)
+inline std::vector<std::string> splitStringAtComas(const std::string &s2)
 {
 	std::vector<std::string> ret;
 
@@ -130,7 +168,7 @@ std::vector<std::string> splitStringAtComas(const std::string &s2)
 }
 
 
-bool hasInvalidCharacters(const std::string &s)
+inline bool hasInvalidCharacters(const std::string &s)
 {
 	auto f = s.find(',');
 	if (f != std::string::npos)
