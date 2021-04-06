@@ -5,7 +5,6 @@
 
 //returns if errors occured or not
 bool execute(
-	std::vector<std::string> &sigma,
 	std::vector<States> &states,
 	int beginStateIndex,
 	std::vector<Transitions> &transitions,

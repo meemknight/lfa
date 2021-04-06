@@ -217,15 +217,14 @@ int main()
 
 	while(true)
 	{
-		std::cout << "enter word:\n";
+		std::cout << "enter word: ";
 		std::string w;
 		std::cin >> w;
-		std::cout << "\n";
 		bool rezult = 0;
 		std::string errMsg;
 		std::string traseu;
 
-		bool good = execute(sigma, states, beginStateIndex, transitions, w, rezult, errMsg, traseu);
+		bool good = execute(states, beginStateIndex, transitions, w, rezult, errMsg, traseu);
 		
 		if(!good)
 		{
