@@ -50,11 +50,6 @@
 			{
 				raise(SIGABRT);
 	
-				// We won't usually get here, but it's possible that a user-registered
-				// abort handler returns, so exit the program immediately.  Note that
-				// even though we are "aborting," we do not call abort() because we do
-				// not want to invoke Watson (the user has already had an opportunity
-				// to debug the error and chose not to).
 				_exit(3);
 			}
 			default:
@@ -100,11 +95,6 @@
 			{
 				raise(SIGABRT);
 	
-				// We won't usually get here, but it's possible that a user-registered
-				// abort handler returns, so exit the program immediately.  Note that
-				// even though we are "aborting," we do not call abort() because we do
-				// not want to invoke Watson (the user has already had an opportunity
-				// to debug the error and chose not to).
 				_exit(3);
 			}
 			case IDRETRY: // Break into the debugger then return control to caller

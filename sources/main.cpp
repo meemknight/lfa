@@ -217,7 +217,35 @@ int main()
 
 	while(true)
 	{
-		execute(sigma, states, beginStateIndex, transitions);
+		std::cout << "enter word:\n";
+		std::string w;
+		std::cin >> w;
+		std::cout << "\n";
+		bool rezult = 0;
+		std::string errMsg;
+		std::string traseu;
+
+		bool good = execute(sigma, states, beginStateIndex, transitions, w, rezult, errMsg, traseu);
+		
+		if(!good)
+		{
+			std::cout << "corupt input\n";
+			std::cout << errMsg << "\n";
+		}else
+		{
+			if (rezult)
+			{
+				std::cout << "DA\n";
+				std::cout << traseu << "\n";
+
+			}
+			else
+			{
+				std::cout << "NU\n";
+			}
+		}
+
+		
 	}
 
 

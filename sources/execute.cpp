@@ -1,18 +1,26 @@
 #include "lfa\execute.h"
 
-void execute(std::vector<std::string> &sigma, 
-	std::vector<States> &states, 
-	int beginStateIndex, 
-	std::vector<Transitions> &transitions)
+bool execute(
+	std::vector<std::string> &sigma,
+	std::vector<States> &states,
+	int beginStateIndex,
+	std::vector<Transitions> &transitions,
+	const std::string &word,
+	bool &rezult,
+	std::string &errMessage,
+	std::string &traseu
+)
 {
-	std::cout << "enter word:\n";
-	std::string w;
-	std::cin >> w;
-	std::cout << "\n";
+	errMessage.clear();
+	rezult = 0;
+	traseu = "Traseu:";
 
 	std::string currentState = states[beginStateIndex].name;
 
-	for(auto i: w)
+	traseu += " ";
+	traseu += currentState;
+
+	for(auto i: word)
 	{
 		std::string nextTranzition = "";
 
@@ -33,15 +41,18 @@ void execute(std::vector<std::string> &sigma,
 
 		if(id == transitions.end())
 		{
-
-			std::cout << "Invalid Transition\nWord not accepted\n";
-			return;
+			errMessage = "Warning: Invalid Transition, word not accepted";
+			rezult = 0;
+			return 1;
 
 		}else
 		{
-			std::cout << "from " << currentState << "  to "
-				<< (*id).stateB << "   with: " << (*id).symbol << "\n";
+			//std::cout << "from " << currentState << "  to "
+			//	<< (*id).stateB << "   with: " << (*id).symbol << "\n";
 			currentState = (*id).stateB;
+
+			traseu += " ";
+			traseu += currentState;
 		}
 
 	}
@@ -59,20 +70,21 @@ void execute(std::vector<std::string> &sigma,
 
 	if(id == states.end())
 	{
-		errorOut("invalid state");
+		errMessage = "Invalid end state. The inputs are probably wrong.";
+		return 0;
 	}else
 	{
-		std::cout << "end state : " << (*id).name << "\n";
-
 		if((*id).isEnd)
 		{
-			std::cout << "Word accepted";
+			rezult = 1;
+			return 1;
 		}else
 		{
-			std::cout << "Word not accepted";
+			rezult = 0;
+			return 1;
 		}
 	}
 
-	std::cout << "\n";
 
 }
+
